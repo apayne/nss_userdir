@@ -1,0 +1,13 @@
+nss_userdir ChangeLog
+mjp-userdir@pilcrow.madison.wi.us
+
+20020430
+  - userdir_pwent:  dynamic buffer allocation; now understands NOTFOUND,
+    UNAVAILABLE (internal error), TRYAGAIN (more memory needed, as for > 1K
+    pw_gecos); some input controls.
+  - getpwent: ignore non-directories in /etc/users; handle TRYAGAINs
+  - getpwuid implemented.
+  - other minor changes.
+
+20020428
+  - first cut; getpwnam, getpwent &c.

@@ -1,0 +1,42 @@
+nss_userdir README
+30 Apr 2002
+
+Overview
+--------
+An implementation of Dan Rench's nascent userdir proposal as an NSS service
+under Linux/glibc.  See http://home.xnet.com/~drench/userdir/ for more
+information.
+
+nss_userdir is free software, with no warranties of any kind.
+
+
+Specifics
+---------
+Installed as an NSS module (servicename:  userdir), getpw* commands will
+consult the directory ``/etc/users/$USERNAME'' for account information.
+
+  struct passwd		userdir file
+  -------------		------------
+  pw_name		NAME
+  pw_passwd		PASSWD
+  pw_uid		UID
+  pw_gid		GID
+  pw_gecos		GECOS
+  pw_dir		DIR
+  pw_shell		SHELL
+
+
+Files may presently _not_ be absent (though they may be empty).
+Non-directories under /etc/users are ignored.
+
+
+TODO
+----
+testing
+spwent/grent support (userdir spec permitting)
+packaging
+
+
+Feedback
+--------
+Bugs and comments to mjp-userdir@pilcrow.madison.wi.us
