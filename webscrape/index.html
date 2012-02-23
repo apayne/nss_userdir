@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head><script type="text/javascript" src="/static/js/analytics.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">archive_analytics.values.service='wb';archive_analytics.values.server_name='wwwb-app45.us.archive.org';archive_analytics.values.server_ms=367;</script><script type="text/javascript" src="/static/js/wbhack.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<link rel="stylesheet" type="text/css" href="/static/css/banner-styles.css?v=1512410678.0" />
+<link rel="stylesheet" type="text/css" href="/static/css/iconochive.css?v=1512410678.0" />
+
+<!-- End Wayback Rewrite JS Include -->
+        <title>Userdir: The end of /etc/passwd?</title>
+        <link rel="StyleSheet" href="/web/20120223133916cs_/http://dren.ch/userdir/userdir.css" type="text/css">
+    </head>
+
+    <body>
+
+        <p class="note">
+        <a href="questions.html">FAQ</a> :
+        <a href="install.html">install</a> :
+        <a href="http://web.archive.org/web/20120223133916/mailto:userdir-subscribe@lists.dren.ch">mailing list</a> :
+        <a href="http://web.archive.org/web/20120223133916/mailto:1be9a9fe60ba36aa6c90a0f1ab373887@e856d72c510137116ed7414755217d8f.tmetic.com">contact</a>
+        </p>
+
+        <h3>Userdir: the end of <tt>/etc/passwd</tt>?</h3>
+        <p><b>Userdir</b> is so far not much more than a proof-of-concept
+        drop-in replacement for FreeBSD's <tt>getpwent.c</tt>, but I believe
+        it has the potential to displace <tt>/etc/password</tt> (and its
+        friends like <tt>/etc/master.passwd</tt> and <tt>vipw</tt>).</p>
+
+        <p>The idea behind it is simple: rather than have one flat
+           root-owned file containing the entire user database, <b>userdir</b>
+           takes advantage of the powerful hierarchical database that is
+           the Unix filesystem. Each login name has its own directory, and
+           each field in <tt>struct passwd</tt> is represented inside that
+           directory by an appropriately named text file.  For example, user
+           "bob"'s shell is in <tt>/etc/users/bob/SHELL</tt> and his home
+           directory is in <tt>/etc/users/bob/DIR</tt>.  And you can find
+           his UID in <tt>/etc/users/bob/UID</tt>.  His crypted password is
+           in <tt>/etc/users/bob/PASSWD</tt>, and since by default this file
+           is mode 0400 and owned by root, there's no need for a separate
+           "shadow" password file.  Of course the system administrator is
+           free to give "bob" (or bob's boss) read and/or write access to
+           this file, paving the way for a (still vaporware) <tt>passwd</tt>
+           utility that doesn't <a href="pwsetuid.html">need</a> its
+           setuid bit set.
+        </p>
+
+        <p>And that's just one of <a href="possibilities.html">many things</a>
+           that are easy to do with <b>userdir</b> that are either difficult
+           or not possible at all with a traditional <tt>/etc/passwd</tt>
+           system.
+        </p>
+
+        <h3>How you can help</h3>
+        <ul>
+            <li><p>If you have a FreeBSD 4.x system that you're willing to
+                experiment with, <a href="install.html">install</a> the code
+                and help me improve it.  It's under a BSD-type license.
+                Or if you like, rewrite it completely since it's really not
+                very complicated and you're probably a better C programmer
+                than I am.</p>
+            </li>
+
+            <li><p>Try writing an NSS module, if you are running a system
+                   that supports such things, that implements userdir.
+                   M.J. Pomraning is working on a <a href="http://web.archive.org/web/20120223133916/http://pilcrow.madison.wi.us/sw/nss_userdir-20020430.tgz">Linux implementation</a>.
+                </p>
+            </li>
+
+            <li><p>If you are running NetBSD, OpenBSD, or FreeBSD-CURRENT,
+                try implementing userdir under that version of NSS.</p>
+            </li>
+
+            <li><p>Some important commands need to become "userdir-aware"
+                like <tt>passwd</tt> and <tt>adduser</tt> (and <tt>useradd</tt>
+                on Linux).</p>
+            </li>
+
+            <li><p>Consider ways of replacing other flat systems files like
+                <tt>/etc/group</tt> with a directory hierarchy.</p>
+            </li>
+        </ul>
+
+        <p>I welcome your questions, comments, and code: <a href="http://web.archive.org/web/20120223133916/mailto:1be9a9fe60ba36aa6c90a0f1ab373887@e856d72c510137116ed7414755217d8f.tmetic.com">1be9a9fe60ba36aa6c90a0f1ab373887@e856d72c510137116ed7414755217d8f.tmetic.com</a>, but read
+           the <a href="questions.html">FAQ</a> first, and consider joining
+           the <a href="http://web.archive.org/web/20120223133916/mailto:userdir-subscribe@lists.dren.ch">mailing
+           list</a>.</p>
+
+		<hr>
+		<p class="note"><a href="http://web.archive.org/web/20120223133916/http://dren.ch/">dren.ch</a></p>
+    </body>
+</html>

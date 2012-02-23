@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- $Id: install.html,v 1.5 2002/05/07 01:58:02 drench Exp $ -->
+
+<html>
+    <head><script type="text/javascript" src="/static/js/analytics.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">archive_analytics.values.service='wb';archive_analytics.values.server_name='wwwb-app40.us.archive.org';archive_analytics.values.server_ms=227;</script><script type="text/javascript" src="/static/js/wbhack.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<link rel="stylesheet" type="text/css" href="/static/css/banner-styles.css?v=1512410678.0" />
+<link rel="stylesheet" type="text/css" href="/static/css/iconochive.css?v=1512410678.0" />
+
+<!-- End Wayback Rewrite JS Include -->
+        <title>Installing Userdir</title>
+        <link rel="StyleSheet" href="/web/20120223134613cs_/http://dren.ch/userdir/userdir.css" type="text/css">
+    </head>
+
+    <body>
+        <h3>Installing Userdir</h3>
+        <p><b>WARNING:</b> This is highly experimental code that alters libc.
+        It is possible that installing this code will cause <tt>login</tt>
+        to break and render your machine unusable. Take proper backups,
+        have rescue floppies at hand, and don't install it on a machine that
+        has any kind of important function of any kind.</p>
+
+        <p>I have only run this code on FreeBSD 4.x series systems and
+           these instructions apply specifically to FreeBSD 4.x. It may
+           very well work as-is on other BSD systems, but I don't guarantee
+           anything.  I won't even guarantee that this code won't do nasty
+           things to your FreeBSD 4.x machine, because it just might.
+           <b>USE AT YOUR OWN RISK!</b></p>
+
+        <p>One last warning: The NIS/YP client code in FreeBSD 4.x is tied
+           into the standard getpwent.c and I did <b>not</b> reimplement it.
+           In other words, understand that if you use this getpwent.c
+           replacement, you will not be able to use NIS/YP as a client.
+           I suppose it could still work as an NIS server, but you read the
+           previous two paragraphs and wouldn't think of doing that.</p>
+
+        <p>Still with me?</p>
+
+        <ol>
+            <li><p>Fetch and, as root, run <a href="pw2userdir.pl">pw2userdir.pl</a>, a Perl script
+                that converts your current <tt>/etc/passwd</tt> into an
+                <tt>/etc/users</tt> hierarchy. I encourage you to do some
+                sanity checks to see that the contents of <tt>/etc/users</tt>
+                corresponds to your existing password file before continuing.
+                </p>
+            </li>
+                
+            <li><p>Fetch <a href="getpwent.c">getpwent.c</a>, the userdir
+                replacement for the standard FreeBSD source file.
+                Copy this file to <tt>/usr/src/lib/libc/gen/getpwent.c</tt>
+                (assuming you have full sources installed under
+                <tt>/usr/src</tt>).
+                Make a backup copy of the original <tt>getpwent.c</tt>
+                if you like before overwriting it.</p>
+            </li>
+
+            <li><p><tt>cd /usr/src &amp;&amp; make buildworld</tt> to rebuild
+                your system with userdir.</p>
+            </li> 
+
+            <li><p>You may wish to try out the new libc before installing it.
+                Set <tt>LD_LIBRARY_PATH=/usr/obj/usr/src/lib/libc</tt> and try
+                some commands that use the getpw* functions like <tt>id</tt>
+                and <tt>finger</tt>. Note that some commands like <tt>ls</tt>
+                and <tt>ps</tt> are statically linked in FreeBSD, and will not
+                be using the new userdir-enabled libc at this point unless
+                you try something like <tt>/usr/obj/usr/src/bin/ls/ls</tt>.</p>
+            </li>
+
+            <li><p><tt>cd /usr/src &amp;&amp; make
+               installworld</tt>, reboot your system, and then let
+               <a href="http://web.archive.org/web/20120223134613/mailto:1be9a9fe60ba36aa6c90a0f1ab373887@e856d72c510137116ed7414755217d8f.tmetic.com">me</a> and members of the
+               <a href="http://web.archive.org/web/20120223134613/mailto:userdir-subscribe@lists.dren.ch">mailing
+               list</a> know how it went.</p>
+            </li>
+        </ol>
+        <p><a href="index.html">back</a>
+    </body>
+</html>

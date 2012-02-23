@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- $Id: questions.html,v 1.2 2002/04/23 02:18:02 drench Exp $ -->
+
+<html>
+    <head><script type="text/javascript" src="/static/js/analytics.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">archive_analytics.values.service='wb';archive_analytics.values.server_name='wwwb-app18.us.archive.org';archive_analytics.values.server_ms=234;</script><script type="text/javascript" src="/static/js/wbhack.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<link rel="stylesheet" type="text/css" href="/static/css/banner-styles.css?v=1512410678.0" />
+<link rel="stylesheet" type="text/css" href="/static/css/iconochive.css?v=1512410678.0" />
+
+<!-- End Wayback Rewrite JS Include -->
+        <title>Userdir: Questions and Answers</title>
+        <link rel="StyleSheet" href="/web/20120223134710cs_/http://dren.ch/userdir/userdir.css" type="text/css">
+    </head>
+    <body>
+        <h3>Some Questions and Answers about Userdir</h3>
+
+        <p>
+        <b>Q:</b>
+        This won't scale. Won't it be way too slow as the number of users
+        (and thus directory entries) increase?</p>
+
+        <p>
+        <b>A:</b>
+        I realize a lot of filesystems are deficient when it comes to
+        directories with a large number of entries.
+        Fortunately, FreeBSD has UFS with DIRHASH and Linux has Reiserfs
+        which don't suffer from these shortcomings. As for performance,
+        this scheme still probably isn't going to beat a Berkeley DB file
+        (or CDB file) or possibly even reading sequentially from a flat
+        <tt>/etc/passwd</tt> file, but the way I see it is, the increase
+        in flexibility more than makes up for the (possibly negligible)
+        performance loss.
+        </p>
+
+        <p>
+        <b>Q:</b>
+        How about a directory hashing scheme so it's not all under one big
+        directory?</p>
+
+        <p>
+        <b>A:</b>
+        A hashing scheme (i.e. <tt>/etc/users/d/r/drench/</tt>) would break
+        the very clean and simple API of disk I/O on files under
+        <tt>/etc/users/<i>USERNAME</i>/</tt>, unless we can all agree on
+        a consistent "depth" (highly unlikely). As I said above, if
+        performance on large directories is an issue, that's a filesystem
+        problem, and it's one that's been largely solved.
+        </p>
+
+        <p>
+        <b>Q:</b>
+        Why not make SHELL a symlink to the shell itself or DIR a symlink
+        to the user's home directory?
+
+        <p>
+        <b>A:</b>
+        While it would be nice to be able to <tt>cd /etc/users/drench/DIR</tt>
+        to get to my home directory or execute
+        <tt>/etc/users/drench/SHELL</tt> directly, I think it's even more
+        important that shell scripts be able to do things like
+        <tt>HOME=`cat /etc/users/drench/DIR`</tt>. It also then ceases to
+        be an <tt>envdir</tt> (i.e. I don't want the contents of the variable
+        SHELL to be the binary contents of the executable). I also like
+        consistency: you can change <b>any</b> field with
+        <tt>echo 'value' &gt; FIELDNAME</tt> in the current scheme.
+        I don't want to go down the path where some need to be symlinks,
+        and some need to be plain files. Plus, this is Unix. If you want
+        to execute your shell, type <tt>`cat /etc/users/mylogin/SHELL`</tt>.
+
+        <p>
+        <b>Q:</b>
+        Wouldn't it be more appropriate to use "HOME" for the user's
+        home directory instead of "DIR"?</p>
+
+        <p>
+        <b>A:</b>
+        I considered using different names for the files,
+        but I decided that being a drop-in replacement, it would be
+        appropriate to not deviate from the names as they are defined
+        in <tt>struct passwd</tt>. So the filenames are identical to
+        the structure, except that I uppercased them. You're
+        always free to symlink HOME to DIR if you like.</p>
+
+        <p>
+        <b>Q:</b>
+        Why <tt>/etc/users</tt>? Why not register a name under
+        <a href="http://web.archive.org/web/20120223134710/http://cr.yp.to/slashpackage.html">slashpackage</a>?</p>
+
+        <p>
+        <b>A:</b>
+        At first I thought about putting it under <tt>/config/users</tt>
+        or <tt>/users</tt>, but I settled on <tt>/etc/users</tt> because
+        the fact is there are many reactionaries in the Unix community
+        who would dismiss the concept out of hand if I had done that.
+        Witness the hostility toward the work of
+        <a href="http://web.archive.org/web/20120223134710/http://cr.yp.to/djb.html">D.J. Bernstein</a>.
+        Still, I'm sure a lot of people are going to dismiss <b>userdir</b>
+        out of hand just because it's still too radically different from
+        <tt>/etc/passwd</tt>. As for
+            <a href="http://web.archive.org/web/20120223134710/http://cr.yp.to/slashpackage.html">slashpackage</a>,
+        I'll consider it, but ultimately I want to see <b>userdir</b> as an
+        integral part of every Unix system, not an optional package.
+        If I'm misunderstanding the concept of
+        <a href="http://web.archive.org/web/20120223134710/http://cr.yp.to/slashpackage.html">slashpackage</a>, please
+        correct me.
+        </p>
+
+        <p>
+        <b>Q:</b>
+        Why not just use <tt>/home</tt>? It's already there and already
+        includes user metadata in the form of dotfiles and the like.</b></p>
+
+        <p>
+        <b>A:</b>
+        That's an interesting idea. I need to ponder that, since I do have a
+        few concerns about it. For one, most system administrators let users
+        own their own home directories, and there are certain fields
+        (UID in particular) that only the system administrator should be
+        able to modify (simple root exploit that would work under the current
+        implementation under /home: <tt>rm ~/UID &amp;&amp;
+        echo 0 &gt; ~/UID</tt>). There are ways to lock this down, certainly,
+        but I'd like to make the transition as painless as possible.
+        This would also break <tt>envdir</tt> unless we created another
+        subdirectory that contains the Userdir fields, like
+        <tt>~/.userdir/</tt>. There's also potential confusion: I have a lot
+        of users whose home directories are not under /home. So for example,
+        <tt>/home/pgsql/DIR</tt> might contain <tt>/usr/local/pgsql</tt>.
+        Not really a big deal, and it's something fairly easy to work around
+        with symlinks.  If you like, you can try it under /home
+        right now: <tt>ln -s /home /etc/users</tt>.
+
+        <p><a href="index.html">back</a>
+    </body>
+</html>

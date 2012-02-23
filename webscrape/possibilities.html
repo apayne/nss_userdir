@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- $Id: possibilities.html,v 1.6 2002/04/23 02:18:02 drench Exp $ -->
+
+<html>
+    <head><script type="text/javascript" src="/static/js/analytics.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">archive_analytics.values.service='wb';archive_analytics.values.server_name='wwwb-app29.us.archive.org';archive_analytics.values.server_ms=272;</script><script type="text/javascript" src="/static/js/wbhack.js?v=1512410678.0" charset="utf-8"></script>
+
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<link rel="stylesheet" type="text/css" href="/static/css/banner-styles.css?v=1512410678.0" />
+<link rel="stylesheet" type="text/css" href="/static/css/iconochive.css?v=1512410678.0" />
+
+<!-- End Wayback Rewrite JS Include -->
+        <title>Userdir Possibilities</title>
+        <link rel="StyleSheet" href="/web/20120223134613cs_/http://dren.ch/userdir/userdir.css" type="text/css">
+    </head>
+
+    <body>
+        <h3>Userdir handles situations that can be difficult or not possible
+            at all with <tt>/etc/passwd</tt></h3>
+            <ul>
+                <li>I want to allow 'bob' to change his GECOS information but
+                    not his login shell.
+                    <pre>
+chown bob /etc/users/bob/GECOS &amp;&amp; \
+    chmod 0644 /etc/users/bob/GECOS
+chown root /etc/users/bob/SHELL &amp;&amp; \
+    chmod 0444 /etc/users/bob/SHELL
+                    </pre>
+                </li>
+                <li>I want to allow bob's boss, 'amelia', to have root-like
+                    control over his account.
+                    <pre>chown -R amelia /etc/users/bob/</pre>
+                    (And you have even more power and flexibility if your
+                    system has ACLs)
+                    <p>
+                </li>
+                <li>I want to know how many users on my system are using
+                    the <tt>zsh</tt> as their login shell.
+                    <pre>grep -l /usr/local/bin/zsh /etc/users/*/SHELL | wc -l</pre>
+                    <p>
+                </li>
+                <li>I don't want to use NIS/YP.<p>
+                    Use NFS:<pre>mount some.other.machine:/etc/users /etc/users</pre>
+                    (or better yet, use a union filesystem mount to mesh
+                    local and remote accounts)
+                    <p>
+                </li>
+                <li>I'm using Bernstein's <a href="http://web.archive.org/web/20120223134613/http://cr.yp.to/qmail.html">qmail</a>, 
+                    <a href="http://web.archive.org/web/20120223134613/http://cr.yp.to/daemontools.html">daemontools</a>
+                    and <a href="http://web.archive.org/web/20120223134613/http://cr.yp.to/ucspi-tcp.html">ucspi-tcp</a>
+                    packages and want to run SMTP service under qmaild's
+                    account.<p>
+                    <tt>Tcpserver</tt>'s <tt><b>-U</b></tt> option switches
+                    its uid and gid to the environment variables $UID and $GID,
+                    respectively:<p>
+                    <pre>exec envdir /etc/users/qmaild tcpserver -U 0 smtp qmail-smtpd</pre>
+                    <p>
+                </li>
+                <li>I don't want it to be possible to change root's shell.
+                    <pre>chflags schg,sunlink /etc/users/root/SHELL &amp;&amp; \
+    sysctl kern.securelevel=4</pre>
+                </li>
+            </ul>
+             Have more ideas? Join the <a href="http://web.archive.org/web/20120223134613/mailto:userdir-subscribe@lists.dren.ch">mailing list</a>
+             and send them in.
+        <p><a href="index.html">back</a>
+    </body>
+</html>
