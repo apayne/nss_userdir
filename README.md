@@ -13,8 +13,8 @@ in separate, distinct files.
 # Attribution
 
 The original userdir webpage is more or less lost to antiquity, but the 
-original format (and concepts) can be found on arhive.org at the 
-following web address:
+original format (and concepts) can be found at the following web 
+address:
 
 * http://web.archive.org/web/20120223133916/http://dren.ch/userdir/
 
@@ -27,3 +27,4 @@ There was an original README that came with this source, but I needed to
 include additional notations without distrubing it, so it has been 
 renamed README.original.  There you will find instructions on how to use 
 it.
+
