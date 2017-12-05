@@ -8,3 +8,6 @@ userdir-pwent.o: userdir-pwent.c
 
 util.o: util.c
 	gcc -fPIC -Wall -c util.c
+
+clean:
+	rm *.o libnss_userdir.so.2
