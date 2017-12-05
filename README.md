@@ -23,8 +23,7 @@ effort to make the initial commit in the author's "name", so that they
 are respected for their work.  Unless a commit in the repository for the 
 code has my name next to it, I won't be able to answer questions.
 
-There was an original README that came with this source, but I needed to 
-include additional notations without distrubing it, so it has been 
-renamed README.original.  There you will find instructions on how to use 
-it.
+There was an original README that came with this source, but I needed to include additional 
+notations without distrubing it, so this file is named README.md, and the original stays the 
+same.  There you will find instructions on how to use it.
 
